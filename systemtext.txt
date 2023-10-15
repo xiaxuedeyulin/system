@@ -1,0 +1,60 @@
+public class PasswordManager {
+    // 加密函数
+    public static String encrypt(String password) {
+        StringBuilder encrypted = new StringBuilder();
+        int offset = 3;
+        
+        // 步骤1：将每个字符的ASCII码加上它在字符串中的位置和偏移值
+        for (int i = 0; i < password.length(); i++) {
+            char c = password.charAt(i);
+            int ascii = (int) c + (i + 1) + offset;
+            encrypted.append((char) ascii);
+        }
+        
+        // 步骤2：将字符串的第一位和最后一位调换顺序
+        if (encrypted.length() > 1) {
+            char firstChar = encrypted.charAt(0);
+            char lastChar = encrypted.charAt(encrypted.length() - 1);
+            encrypted.setCharAt(0, lastChar);
+            encrypted.setCharAt(encrypted.length() - 1, firstChar);
+        }
+        
+        // 步骤3：将字符串反转
+        return encrypted.reverse().toString();
+    }
+
+    // 解密函数
+    public static String decrypt(String encryptedPassword) {
+        StringBuilder decrypted = new StringBuilder(encryptedPassword).reverse();
+        
+        // 步骤2：将字符串的第一位和最后一位调换顺序
+        if (decrypted.length() > 1) {
+            char firstChar = decrypted.charAt(0);
+            char lastChar = decrypted.charAt(decrypted.length() - 1);
+            decrypted.setCharAt(0, lastChar);
+            decrypted.setCharAt(decrypted.length() - 1, firstChar);
+        }
+        
+        // 步骤1：将每个字符的ASCII码减去它在字符串中的位置和偏移值
+        int offset = 3;
+        for (int i = decrypted.length() - 1; i >= 0; i--) {
+            char c = decrypted.charAt(i);
+            int ascii = (int) c - (i + 1) - offset;
+            decrypted.setCharAt(i, (char) ascii);
+        }
+        
+        return decrypted.toString();
+    }
+
+    public static void main(String[] args) {
+        String password = "HelloWorld123";
+        
+        // 加密
+        String encryptedPassword = encrypt(password);
+        System.out.println("加密后的密码：" + encryptedPassword);
+        
+        // 解密
+        String decryptedPassword = decrypt(encryptedPassword);
+        System.out.println("解密后的密码：" + decryptedPassword);
+    }
+}
